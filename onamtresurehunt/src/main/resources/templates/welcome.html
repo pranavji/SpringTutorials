@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Spring Boot </title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">OSPYN TRESURE HUNT</a>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="row">
+        <div class="col-sm4 col-sm-offset-4">
+            <div class="starter-template">
+                <h1>Coming soon</h1>
+                <h2>
+                    <span th:text="'Hello, ' + ${message}"></span>
+                    <img th:src="@{${'/QRCodes/'+message+'.png'}}">
+                </h2>
+            </div>
+
+            <ol>
+                <li th:each="task : ${tasks}" th:text="${task}"></li>
+            </ol>
+        </div>
+
+    </div>
+
+</main>
+<!-- /.container -->
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>
