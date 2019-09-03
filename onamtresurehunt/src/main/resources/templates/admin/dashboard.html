@@ -39,7 +39,7 @@ alert(message);
 
 </script>
 
-<div id="dialogContainer" style="display:none;width:100%;height:100%;background-color:black;position:absolute;top:0px;left:0px;z-index:999">
+<div id="dialogContainer" style="display:none;width:100%;height:100%;background-color:black;position:fixed;top:0px;left:0px;z-index:999">
 
   <div class="center" style="background:white;z-index:999999999">
     <button class="btn btn-warning" style="background:red;position:absolute;top:20px;right:20px;" onclick="closeContainer();">X</button>
@@ -169,7 +169,7 @@ alert(message);
                         <td th:text ="${clue.clue}" ></td>
                         <td th:text ="${clue.password}"></td>
                         <td th:text ="${clue.unLocked}"></td>
-                        <td> <a href="#" th:onclick="'javascript:viewClue(\'' + ${clue.id} + '\');'" class="no_target"> <br><img style="width:40px" th:src="@{'/QRCodes/qr'+${clue.id}}+'.png'"/> Click to Open</a></td>
+                        <td  > <a href="#" th:data1="${clue.uuid}" onclick="viewClue(this.getAttribute('data1'))" class="no_target"> <br><img style="width:40px" th:src="@{'/QRCodes/qr'+${clue.uuid}}+'.png'"/> Click to Open</a></td>
                         <td><i class="material-icons">edit</i> <i class="material-icons">delete</i></td>
                       </tr>
 
@@ -541,6 +541,7 @@ alert(message);
   }
   function viewClue (id)
   {
+  alert(id);
   openAddDialog("viewClue",id);
   }
   </script>

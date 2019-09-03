@@ -7,7 +7,7 @@ cursor:grabbing ;
 {
 height: 480px;
   width: 640px;
-  position: absolute;
+  position: static;
   left: 35%;
   margin-left: -50px;
   top: 25%;

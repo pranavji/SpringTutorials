@@ -11,6 +11,7 @@
 	<groupId>com.ospyn</groupId>
 	<artifactId>onamtresurehunt</artifactId>
 	<version>1.0b</version>
+	<packaging>jar</packaging>
 	<name>Onam Tresure Hunt</name>
 	<description>Project for onam @ Ospyn</description>
 

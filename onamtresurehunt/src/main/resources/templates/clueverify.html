@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Spring Boot </title>
+
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">OSPYN TRESURE HUNT</a>
+</nav>
+
+<main role="main" class="container">
+    <form style="margin-top:200px" action="/service/verifyclue" method="post">
+        <input type="hidden" th:value="${uuid}" class="form-control mb-2 mr-sm-2" id="uuid" name="uuid">
+        <div class="form-group">
+            <label for="pwd">Enter password to unlock this clue</label>
+            <input type="password" class="form-control" id="pwd" name="pwd">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Unlock</button>
+    </form>
+   <!-- <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+
+
+            <ol>
+                <form style="margin-top:200px" class="form-group" action="/services/verifyclue">
+
+                    <input type="hidden" th:value="${uuid}" class="form-control mb-2 mr-sm-2" id="email">
+                    <label for="pwd" class="mr-sm-2">Enter Password to unlock the clue:</label>
+                    <input type="password" class="form-control mb-2 mr-sm-2" id="pwd">
+                    <div class="form-check mb-2 mr-sm-2">
+
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                </form>
+            </ol>
+        </div>
+
+    </div>-->
+
+</main>
+<!-- /.container -->
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>

@@ -64,7 +64,7 @@ public class GeneralController {
         Clue clueDTO = new Clue(clue,password,clueTitle,team);
         jpaClueRepository.save(clueDTO);
 
-        String clueId =String.valueOf(clueDTO.getId());
+        String clueId =clueDTO.getUuid().toString();
         new ZXingHelper().getQRCodeImage("http://202.88.244.214:6005/getClue?id="+clueId,300,300,"qr"+clueId);
 
             model.addAttribute("message", "Sucess");
@@ -92,6 +92,22 @@ public class GeneralController {
        else{
            return "redirect:../admin?message=UnknownError";
        }
+
+
+    } @PostMapping("/service/verifyclue")
+    public String verifyclue(HttpSession session, @RequestParam(name = "pwd", required = true, defaultValue = "") String pwd, @RequestParam(name = "uuid", required = true, defaultValue = "") String uuid, Model model ) {
+
+        List<Clue> clue=jpaClueRepository.findByUuidAndPassword(uuid,pwd);
+        if(!clue.isEmpty())
+        {
+            model.addAttribute("uuid",uuid);
+            model.addAttribute("clueObject",clue.get(0));
+            return "clueview";
+        }
+        else
+        {
+            return "redirect:../getClue";
+        }
 
 
     }

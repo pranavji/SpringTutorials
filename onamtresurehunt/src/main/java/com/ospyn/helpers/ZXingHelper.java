@@ -12,7 +12,19 @@ public class ZXingHelper {
 
     public  void getQRCodeImage(String text, int width, int height, String fname) {
         try {
+
             String x= this.getClass().getResource("../../../static/QRCodes/").getPath();
+            File Qrpath = new File(x);
+            if(!Qrpath.exists())
+            {
+                try{
+                    Qrpath.mkdir();
+
+                }
+                catch(SecurityException se){
+                    se.printStackTrace();
+                }
+            }
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -38,6 +39,10 @@ public class Clue {
     @Column
     private String password;
 
+    @NotNull
+    @Column
+    private String uuid;
+
     @Column
     @NotNull
     String clueTitle;
@@ -50,10 +55,11 @@ public class Clue {
     @JoinColumn(name = "team_list_id" )
     private Team team;
 
-    public Clue(String clue, String password, String clueTitle, Team team) {
+    public Clue(String clue, String password, String clueTitle, Team team ) {
         this.clue = clue;
         this.password = password;
         this.clueTitle = clueTitle;
         this.team = team;
+        this.uuid = UUID.randomUUID().toString();
     }
 }

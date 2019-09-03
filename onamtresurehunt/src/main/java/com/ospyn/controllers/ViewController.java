@@ -31,7 +31,7 @@ public class ViewController {
         model.addAttribute("message", name);
         new ZXingHelper().getQRCodeImage(name,300,300,name);
 
-        return "welcome"; //view
+        return "index"; //view
     }
     private List<String> tasks = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
 
@@ -45,7 +45,7 @@ public class ViewController {
         model.addAttribute("message", "test");
         model.addAttribute("tasks", tasks);
 
-        return "welcome"; //view
+        return "index"; //view
     }
     @GetMapping("/admin")
     public String admin(@RequestParam(name = "message", required = false, defaultValue = "") String message,Model model, HttpSession session) {
@@ -62,5 +62,13 @@ public class ViewController {
 
         model.addAttribute("teams",jpaTeamRepository.findAll());
         return "admin/dashboard"; //view
+    }
+    @GetMapping("/getClue")
+    public String getClue(@RequestParam(name = "id", required = false, defaultValue = "") String uuid,Model model) {
+
+
+
+        model.addAttribute("uuid",uuid);
+        return "clueverify"; //view
     }
 }
