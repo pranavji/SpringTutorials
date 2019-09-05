@@ -11,11 +11,29 @@
 </head>
 
 <body>
+<script  th:inline="javascript">
+var message = /*[[${message}]]*/ {};
 
+if(null!=message && message.length>0)
+{
+alert(message);
+}
+</script>
 <div class="container">
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
-            <span th:text="'Hello, ' + ${clueObject.clueTitle}"></span>
+
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action active">
+                   Details
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" th:text="'Clue Title: '+${clueObject.clueTitle}"></a>
+                <a href="#" class="list-group-item list-group-item-action" th:text="'Clue: '+${clueObject.clue}"></a>
+                <a href="#" class="list-group-item list-group-item-action" th:text="'Next Clue Password: '+${nextCluePassword}"></a>
+
+
+            </div>
+
         </div>
     </div>
 

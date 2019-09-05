@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-
+@Table(name = "clue")
 public class Clue {
 
     @Id
@@ -52,8 +52,11 @@ public class Clue {
 
 
     @ManyToOne
-    @JoinColumn(name = "team_list_id" )
+    @JoinColumn(name = "teamlistid" )
     private Team team;
+
+
+    private Long nextClue;
 
     public Clue(String clue, String password, String clueTitle, Team team ) {
         this.clue = clue;

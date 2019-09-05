@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -61,9 +64,27 @@ public class GeneralController {
 
         try {
         Team team = jpaTeamRepository.findById(Long.parseLong(teamid)).get();
-        Clue clueDTO = new Clue(clue,password,clueTitle,team);
-        jpaClueRepository.save(clueDTO);
+            Clue clueDTO = new Clue(clue,password,clueTitle,team);
 
+            Clue prevClue = null;
+        try {
+            prevClue = jpaTeamRepository.findById(team.getId()).get().getClues().stream().max(new Comparator<Clue>() {
+                @Override
+                public int compare(Clue o1, Clue o2) {
+                    return(int)(o1.getId()-o2.getId());
+                }
+            }).get();
+
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+            jpaClueRepository.save(clueDTO);
+            if(prevClue!=null){
+            prevClue.setNextClue(jpaClueRepository.save(clueDTO).getId());
+            jpaClueRepository.save(prevClue);
+            }
         String clueId =clueDTO.getUuid().toString();
         new ZXingHelper().getQRCodeImage("http://202.88.244.214:6005/getClue?id="+clueId,300,300,"qr"+clueId);
 
@@ -100,15 +121,22 @@ public class GeneralController {
         List<Clue> clue=jpaClueRepository.findByUuidAndPassword(uuid,pwd);
         if(!clue.isEmpty())
         {
+            clue.get(0).setUnLocked(true);
             model.addAttribute("uuid",uuid);
             model.addAttribute("clueObject",clue.get(0));
+            model.addAttribute("nextCluePassword",jpaClueRepository.findById(clue.get(0).getNextClue()).get().getPassword());
             return "clueview";
         }
         else
         {
-            return "redirect:../getClue";
-        }
 
+            try {
+                return "redirect:../getClue?id="+uuid+"&message=oops";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
 
     }
     @GetMapping("/service/logout")

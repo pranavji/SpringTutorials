@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-@Table(name = "team_list")
+@Table(name = "teamlist")
 public class Team {
 
     @Id
