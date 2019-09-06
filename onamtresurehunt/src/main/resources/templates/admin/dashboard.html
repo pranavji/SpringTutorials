@@ -41,9 +41,9 @@ alert(message);
 
 <div id="dialogContainer" style="display:none;width:100%;height:100%;background-color:black;position:fixed;top:0px;left:0px;z-index:999">
 
-  <div class="center" style="background:white;z-index:999999999">
+  <div class="center" style="background:white;z-index:999999999;position:fixed;top:30%;left:35%;">
     <button class="btn btn-warning" style="background:red;position:absolute;top:20px;right:20px;" onclick="closeContainer();">X</button>
-    <div id="dialogBox" class="center"></div>
+    <div id="dialogBox" class=""></div>
 
   </div>
 </div>
@@ -65,7 +65,7 @@ alert(message);
 
           <th:block th:each="team : ${teams}">
           <li class="nav-item active  ">
-            <a class="nav-link  no_target" href="">
+            <a class="nav-link" th:href="'#div'+${team.id}">
               <i class="material-icons">dashboard</i>
               <p th:text="${team.teamName}"></p>
               <!--<span style="z-index:999" th:onclick="'javascript:deleteTeam(\'' + ${team.id} + '\');'" >
@@ -128,7 +128,7 @@ alert(message);
 
           <div class="row">
             <th:block th:each="team : ${teams}">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-lg-12 col-md-12" th:id="'div'+${team.id}">
               <div class="card">
                 <div class="card-header card-header-primary switch-trigger">
                   <h4 class="card-title" th:text="${team.teamName}"></h4>

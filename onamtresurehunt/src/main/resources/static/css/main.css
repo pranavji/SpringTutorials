@@ -17,3 +17,6 @@ height: 480px;
   padding:40px;
   padding-top:100px;
 }
+html {
+  scroll-behavior: smooth;
+}

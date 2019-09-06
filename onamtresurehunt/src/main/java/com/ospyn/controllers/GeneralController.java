@@ -121,10 +121,14 @@ public class GeneralController {
         List<Clue> clue=jpaClueRepository.findByUuidAndPassword(uuid,pwd);
         if(!clue.isEmpty())
         {
-            clue.get(0).setUnLocked(true);
+            Clue currentClue = clue.get(0);
+            if (currentClue.getNextClue()==null)
+                return "winner";
+            currentClue.setUnLocked(true);
+            jpaClueRepository.saveAll(clue);
             model.addAttribute("uuid",uuid);
-            model.addAttribute("clueObject",clue.get(0));
-            model.addAttribute("nextCluePassword",jpaClueRepository.findById(clue.get(0).getNextClue()).get().getPassword());
+            model.addAttribute("clueObject", currentClue);
+            model.addAttribute("nextCluePassword",jpaClueRepository.findById(currentClue.getNextClue()).get().getPassword());
             return "clueview";
         }
         else
