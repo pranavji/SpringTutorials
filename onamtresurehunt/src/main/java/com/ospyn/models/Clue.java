@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +17,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "clue")
 public class Clue {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +54,11 @@ public class Clue {
     @Column
     boolean unLocked;
 
+
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    Date unLockTime;
 
     @ManyToOne
     @JoinColumn(name = "teamlistid" )

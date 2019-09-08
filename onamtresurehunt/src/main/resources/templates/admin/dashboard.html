@@ -146,6 +146,10 @@ alert(message);
                         <i class="material-icons">add</i> Add Clue
                         <div class="ripple-container"></div>
                       </a>
+
+                    <li th:if="${team.winner}" class="nav-item" th:id="${'team'+team.id}">
+                    <i class="material-icons">trophy</i> Winner
+                    <div class="ripple-container"></div>
                     </li>
 
                   </ul>
@@ -158,6 +162,7 @@ alert(message);
                       <th>Clue</th>
                       <th>Password</th>
                       <th>Done</th>
+                      <th>Done</th>
                       <th>QrCode</th>
                       <th>Action</th>
                     </thead>
@@ -168,7 +173,8 @@ alert(message);
                         <td th:text ="${clue.clueTitle}" ></td>
                         <td th:text ="${clue.clue}" ></td>
                         <td th:text ="${clue.password}"></td>
-                        <td th:text ="${clue.unLocked}"></td>
+                        <td th:id="${'unlocked' + clue.id}" th:text ="${clue.unLocked}"></td>
+                        <td th:id="${'unlocktime'+clue.id}" th:text ="${clue.unLockTime}"></td>
                         <td  > <a href="#" th:data1="${clue.uuid}" onclick="viewClue(this.getAttribute('data1'))" class="no_target"> <br><img style="width:40px" th:src="@{'/QRCodes/qr'+${clue.uuid}}+'.png'"/> Click to Open</a></td>
                         <td><i class="material-icons">edit</i> <i class="material-icons">delete</i></td>
                       </tr>

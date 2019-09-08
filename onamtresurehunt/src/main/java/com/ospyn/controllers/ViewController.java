@@ -1,5 +1,6 @@
 package com.ospyn.controllers;
 
+import com.ospyn.Utils;
 import com.ospyn.helpers.ZXingHelper;
 import com.ospyn.models.Team;
 import com.ospyn.repository.JpaTeamRepository;
@@ -60,7 +61,13 @@ public class ViewController {
             model.addAttribute("message",message);
         }
 
+        jpaTeamRepository.findAll().forEach(p->{if(p.isWinner()){
+            Utils.Winner=p;
+        }});
+
         model.addAttribute("teams",jpaTeamRepository.findAll());
+
+
         return "admin/dashboard"; //view
     }
     @GetMapping("/getClue")
@@ -70,5 +77,13 @@ public class ViewController {
 
         model.addAttribute("uuid",uuid);
         return "clueverify"; //view
+    }
+    @GetMapping("/socket")
+    public String getSocket(@RequestParam(name = "id", required = false, defaultValue = "") String uuid,Model model) {
+
+
+
+        model.addAttribute("uuid",uuid);
+        return "socket"; //view
     }
 }

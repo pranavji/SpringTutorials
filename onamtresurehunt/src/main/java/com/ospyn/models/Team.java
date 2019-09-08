@@ -29,6 +29,9 @@ public class Team {
 
     private List<Clue> clues;
 
+    @Column
+    boolean winner;
+
     public Team(String teamName) {
         this.teamName = teamName;
     }
