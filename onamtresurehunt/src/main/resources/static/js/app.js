@@ -1,5 +1,5 @@
 
-var pushSocket = new WebSocket("ws://127.0.0.1:6005/push")
+var pushSocket = new WebSocket("ws://202.88.244.214:6005/push")
 
 pushSocket.onmessage = function (event) {
    notificationDTO = JSON.parse(event.data);
@@ -7,7 +7,7 @@ pushSocket.onmessage = function (event) {
    winner= '<li th:if="${team.winner}" class="nav-item" > <a class="nav-link" href="#" data-toggle="button">  <i class="material-icons">announcement</i>Winner <div class="ripple-container"></div> </a></li>';
    $("#unlocked"+notificationDTO.clueid).text(notificationDTO.done);
    $("#unlocktime"+notificationDTO.clueid).text(notificationDTO.unlocktime);
-   alert(notificationDTO.winner);
+  // alert(notificationDTO.winner);
    if(notificationDTO.winner==true){
    $("#teamcontainer"+notificationDTO.teamid).html(winner);
    }
@@ -34,7 +34,7 @@ pushSocket.onclose = function (event) {
 function deleteClue(teamid,clueid)
 {
 if(confirm("Are you sure you want to delete the clue?"))
-$.get('http://localhost:6005/ajax/deleteclue?clueid='+clueid+'&teamid='+teamid,
+$.get('http://202.88.244.214:6005/ajax/deleteclue?clueid='+clueid+'&teamid='+teamid,
 function (data) {
      location.reload(true);
  }
@@ -43,7 +43,7 @@ function (data) {
 function deleteTeam(teamid)
 {
 if(confirm("Are you sure you want to delete this Team? All subsequent clues will be deleted! "))
-$.get('http://localhost:6005/ajax/deleteteam?&teamid='+teamid,
+$.get('http://202.88.244.214:6005/ajax/deleteteam?&teamid='+teamid,
 function (data) {
      location.reload(true);
  }
@@ -67,9 +67,29 @@ function (data) {
   else if(mode=="addClueContent")
   {
   $("#xxteamid").val(id);
+  $("#formmode").val("add");
   $("#dialogBox").html($("#addClueForm").html());
 
    }
+   else if(mode=="editClueContent")
+     {
+      $("#dialogBox").html($("#addClueForm").html());
+     $("#xxclueid").val(id);
+   //  alert($("#xxclueid").val());
+     $("#cluetitle").val($("#cluetitle"+id).text());
+   //  alert($("#cluetitle").val());
+     $("#clue").val($("#clue"+id).text());
+    // alert($("#clue").val());
+     $("#clueimage").val($("#clueimages"+id).val());
+    // alert($("#clueimage").val());
+     $("#password").val($("#cluepassword"+id).text());
+   //  alert($("#password").val());
+     $("#formmode").val("edit");
+    // alert($("#formmode").val());
+
+ $("#dialogContainer").fadeIn();
+
+      }
    else if(mode=="viewClue")
   {
 
@@ -99,6 +119,11 @@ function (data) {
   openAddDialog("addClueContent",id);
   }
 
+  function editClue(id)
+  {
+  openAddDialog("editClueContent",id);
+  }
+
   function viewClue (id)
   {
   alert(id);
@@ -114,7 +139,7 @@ function (data) {
   function loadNotification()
   {
     $.get(
-    "http://localhost:6005/ajax/notification",
+    "http://202.88.244.214:6005/ajax/notification",
     function(data){
 
     $("#notificationContent").append("<ul class='list-group'></ul>");

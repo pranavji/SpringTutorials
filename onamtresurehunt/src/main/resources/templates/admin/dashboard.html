@@ -181,14 +181,17 @@ alert(message);
                            <th:block th:each="clue,iterationStatus : ${team.clues}">
                              <tr >
                                <td th:text="${iterationStatus.count}"></td>
-                               <td th:text ="${clue.clueTitle}" ></td>
-                               <td th:text ="${clue.clue}" ></td>
-                               <td th:text ="${clue.password}"></td>
+                               <td th:id="${'cluetitle' + clue.id}" th:text ="${clue.clueTitle}" ></td>
+                               <td th:id="${'clue' + clue.id}" th:text ="${clue.clue}" ></td>
+                               <td th:id="${'cluepassword' + clue.id}" th:text ="${clue.password}"></td>
                                <td th:id="${'unlocked' + clue.id}" th:text ="${clue.unLocked}"></td>
                                <td th:id="${'unlocktime'+clue.id}" th:text ="${clue.unLockTime}"></td>
                                <td  > <a href="#" th:data1="${clue.uuid}" onclick="viewClue(this.getAttribute('data1'))" class="no_target"> <br><img style="width:40px" th:src="@{'/QRCodes/qr'+${clue.uuid}}+'.png'"/> Click to Open</a></td>
                                <td   > <a th:if="${clue.clueImage != null }" href="#" th:data2="${clue.clueImage}" onclick="viewClueImage(this.getAttribute('data2'))" class="no_target"> <br><img style="width:40px" th:src="@{'/ClueImage/'+${clue.clueImage}}"/> Click to Open</a></td>
-                               <td><a  href="#" th:onclick="'deleteClue(\''+${team.id}+'\',\''+${clue.id}+'\')'"><i class="material-icons">edit</i> <i class="material-icons">delete</i></a></td>
+                               <input th:id="${'clueimages'+clue.id}" type="hidden" th:value="${clue.clueImage}">
+
+                               <td><a  href="#" th:onclick="'editClue(\''+${clue.id}+'\')'"><i class="material-icons">edit</i></a>
+                                 <a  href="#" th:onclick="'deleteClue(\''+${team.id}+'\',\''+${clue.id}+'\')'"> <i class="material-icons">delete</i></a></td>
                              </tr>
 
                            </th:block>
@@ -197,6 +200,7 @@ alert(message);
                        </div>
                      </div>
                    </div>
+
 
                  </th:block>
 
@@ -500,8 +504,8 @@ alert(message);
   <div style="display:none" id="addClueForm">
     <div >  <form action="service/addclue">
       <div class="form-group" style="margin-top:50px">
-      <label for="cluetitile">Clue Title</label>
-        <input required="true" type="text" class="form-control" name="cluetitle" id="cluetitile">
+      <label for="cluetitle">Clue Title</label>
+        <input required="true" type="text" class="form-control" name="cluetitle" id="cluetitle">
       </div>
       <div class="form-group" style="margin-top:50px">
       <label for="clue">Clue</label>
@@ -518,6 +522,8 @@ alert(message);
       <div class="form-group" style="margin-top:50px">
         <input required="true" type="hidden" class="form-control" name="teamid" id="xxteamid">
       </div>
+      <input th:id="xxclueid" type="hidden" name="clueid">
+      <input th:id="formmode" type="hidden" name="mode">
       <button style="position:absolute;bottom:20px;right:20px;" type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>

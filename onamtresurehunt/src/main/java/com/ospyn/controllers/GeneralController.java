@@ -63,33 +63,47 @@ public class GeneralController {
                           @RequestParam(name = "password", required = true, defaultValue = "") String password,
                           @RequestParam(name = "teamid", required = true, defaultValue = "") String teamid,
                           @RequestParam(name = "clueimage", defaultValue = "") String clueImage,
+                          @RequestParam(name = "clueid", defaultValue = "") Long editclueId,
+                          @RequestParam(name = "mode", defaultValue = "") String formMode,
                           Model model) {
 
         try {
-            Team team = jpaTeamRepository.findById(Long.parseLong(teamid)).get();
-            Clue clueDTO = new Clue(clue, password, clueTitle, team ,clueImage);
+            if(formMode.equals("add"))
+            {
+                Team team = jpaTeamRepository.findById(Long.parseLong(teamid)).get();
+                Clue clueDTO = new Clue(clue, password, clueTitle, team ,clueImage);
 
-            Clue prevClue = null;
-            try {
-                prevClue = jpaTeamRepository.findById(team.getId()).get().getClues().stream().max(new Comparator<Clue>() {
-                    @Override
-                    public int compare(Clue o1, Clue o2) {
-                        return (int) (o1.getId() - o2.getId());
-                    }
-                }).get();
+                Clue prevClue = null;
+                try {
+                    prevClue = jpaTeamRepository.findById(team.getId()).get().getClues().stream().max(new Comparator<Clue>() {
+                        @Override
+                        public int compare(Clue o1, Clue o2) {
+                            return (int) (o1.getId() - o2.getId());
+                        }
+                    }).get();
 
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                jpaClueRepository.save(clueDTO);
+                if (prevClue != null) {
+                    prevClue.setNextClue(jpaClueRepository.save(clueDTO).getId());
+                    jpaClueRepository.save(prevClue);
+                }
+                String clueId = clueDTO.getUuid().toString();
+                new ZXingHelper().getQRCodeImage("http://202.88.244.214:6005/getClue?id=" + clueId, 300, 300, "qr" + clueId);
+
             }
-            jpaClueRepository.save(clueDTO);
-            if (prevClue != null) {
-                prevClue.setNextClue(jpaClueRepository.save(clueDTO).getId());
-                jpaClueRepository.save(prevClue);
+            else if(formMode.equals("edit"))
+            {
+                Clue editClue= jpaClueRepository.findById(editclueId).get();
+                editClue.setClueTitle(clueTitle);
+                editClue.setClue(clue);
+                editClue.setPassword(password);
+                editClue.setClueImage(clueImage);
+                jpaClueRepository.save(editClue);
             }
-            String clueId = clueDTO.getUuid().toString();
-            new ZXingHelper().getQRCodeImage("http://202.88.244.214:6005/getClue?id=" + clueId, 300, 300, "qr" + clueId);
-
             model.addAttribute("message", "Sucess");
             return "redirect:../admin";
         } catch (DataIntegrityViolationException e) {
