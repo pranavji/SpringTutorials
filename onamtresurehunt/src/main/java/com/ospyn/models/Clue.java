@@ -3,8 +3,6 @@ package com.ospyn.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -51,12 +49,15 @@ public class Clue {
     @NotNull
     String clueTitle;
 
+    @Column(nullable = true)
+    String clueImage;
+
     @Column
     boolean unLocked;
 
 
 
-    @UpdateTimestamp
+    //@UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     Date unLockTime;
 
@@ -67,11 +68,21 @@ public class Clue {
 
     private Long nextClue;
 
-    public Clue(String clue, String password, String clueTitle, Team team ) {
+    public Clue(String clue, String password, String clueTitle, Team team, String clueImage ) {
         this.clue = clue;
         this.password = password;
         this.clueTitle = clueTitle;
         this.team = team;
         this.uuid = UUID.randomUUID().toString();
+        this.clueImage = clueImage;
+    }
+
+    public String getClueImage() {
+        if(null!=clueImage)
+        {
+            if(clueImage.trim().length()<=0)
+                clueImage=null;
+        }
+        return clueImage;
     }
 }

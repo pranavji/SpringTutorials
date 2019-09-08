@@ -1,13 +1,23 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Bootstrap Example</title>
+    <title th:text="'Clue '+${clueObject.clueTitle}">Clue </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" th:href="@{/img/logo.png}" >
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<style>
+    body {
+  background-image: url('../img/maveli.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: left bottom;
+   background-size: 80%;
+}
+</style>
 </head>
 
 <body>
@@ -19,7 +29,13 @@ if(null!=message && message.length>0)
 alert(message);
 }
 </script>
-<div class="container">
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <img style="width:100%" th:src="@{/img/welldone.png}">
+        <p>Below are the details to next Clue</p>
+    </div>
+</div>
+<div class="container" style="opacity:0.8">
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
 
@@ -29,6 +45,7 @@ alert(message);
                 </a>
                 <a href="#" class="list-group-item list-group-item-action" th:text="'Clue Title: '+${clueObject.clueTitle}"></a>
                 <a href="#" class="list-group-item list-group-item-action" th:text="'Clue: '+${clueObject.clue}"></a>
+                <a href="#" class="list-group-item list-group-item-action"  th:if="${clueObject.clueImage != null }" >Clue Image: <img th:src="${clueObject.clueImage}"></a>
                 <a href="#" class="list-group-item list-group-item-action" th:text="'Next Clue Password: '+${nextCluePassword}"></a>
 
 

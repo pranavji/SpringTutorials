@@ -3,6 +3,7 @@ package com.ospyn.controllers;
 import com.ospyn.Utils;
 import com.ospyn.helpers.ZXingHelper;
 import com.ospyn.models.Team;
+import com.ospyn.repository.JpaClueRepository;
 import com.ospyn.repository.JpaTeamRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
 public class ViewController {
 
     @Autowired
     private JpaTeamRepository jpaTeamRepository;
+
+    @Autowired
+    private JpaClueRepository jpaClueRepository;
 
     @GetMapping("/test")
     public String mainWithParam(
@@ -71,11 +73,13 @@ public class ViewController {
         return "admin/dashboard"; //view
     }
     @GetMapping("/getClue")
-    public String getClue(@RequestParam(name = "id", required = false, defaultValue = "") String uuid,Model model) {
+    public String getClue(@RequestParam(name = "id", required = false, defaultValue = "") String uuid,@RequestParam(name = "message", defaultValue = "") String message,Model model) {
 
-
+        model.addAttribute("title",jpaClueRepository.findByUuid(uuid).get().getClueTitle());
 
         model.addAttribute("uuid",uuid);
+
+        model.addAttribute("message",message);
         return "clueverify"; //view
     }
     @GetMapping("/socket")

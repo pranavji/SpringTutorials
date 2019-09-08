@@ -1,15 +1,16 @@
 package com.ospyn.helpers;
+
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 @Component
 @ServerEndpoint(value = "/push")
 public class PushSocket {
@@ -32,11 +33,11 @@ public class PushSocket {
         System.out.println("Message from " + session.getId() + ": " + message);
 
     }
-   public static void broadCast(String Message)
+   public static void broadCast(String message)
    {
        socketSessions.forEach(p-> {
            try {
-               p.getBasicRemote().sendText(Message);
+               p.getBasicRemote().sendText(message);
            } catch (IOException e) {
                e.printStackTrace();
            }

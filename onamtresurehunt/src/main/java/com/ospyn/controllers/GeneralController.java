@@ -17,14 +17,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 public class GeneralController {
@@ -60,11 +62,12 @@ public class GeneralController {
                           @RequestParam(name = "clue", required = true, defaultValue = "") String clue,
                           @RequestParam(name = "password", required = true, defaultValue = "") String password,
                           @RequestParam(name = "teamid", required = true, defaultValue = "") String teamid,
+                          @RequestParam(name = "clueimage", defaultValue = "") String clueImage,
                           Model model) {
 
         try {
             Team team = jpaTeamRepository.findById(Long.parseLong(teamid)).get();
-            Clue clueDTO = new Clue(clue, password, clueTitle, team);
+            Clue clueDTO = new Clue(clue, password, clueTitle, team ,clueImage);
 
             Clue prevClue = null;
             try {
@@ -115,7 +118,7 @@ public class GeneralController {
 
     @PostMapping("/service/verifyclue")
     public String verifyclue(HttpSession session, @RequestParam(name = "pwd", required = true, defaultValue = "") String pwd, @RequestParam(name = "uuid", required = true, defaultValue = "") String uuid, Model model) {
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
         List<Clue> clue = jpaClueRepository.findByUuidAndPassword(uuid, pwd);
         if (!clue.isEmpty()) {
             Clue currentClue = clue.get(0);
@@ -123,18 +126,35 @@ public class GeneralController {
             if (currentClue.getNextClue() == null) {
                 if(!currentClue.isUnLocked()) {
                     currentClue.setUnLocked(true);
-                    jpaClueRepository.saveAll(clue);
+                    currentClue.setUnLockTime(new Date());
+                    List winnerlist = StreamSupport.stream(jpaTeamRepository.findAll().spliterator(),false).filter(p->p.isWinner()).collect(Collectors.toList());
+                    if(winnerlist.isEmpty())
+                    {
+                        Team currentTeam = currentClue.getTeam();
+                        currentTeam.setWinner(true);
+                        jpaTeamRepository.save(currentTeam);
+                    }
 
+                    jpaClueRepository.saveAll(clue);
+                   if(currentClue.getTeam().isWinner())
+                       PushSocket.broadCast(new Notification(Notification.add("Team \""+currentClue.getTeam().getTeamName()+"\" won at "+currentClue.getUnLockTime(),currentClue.getUnLockTime()),currentClue.getTeam().getId(),currentClue.getId(),currentClue.getUnLockTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(formatter),true,true).toString());
+                   else
+                       PushSocket.broadCast(new Notification(Notification.add("Team \""+currentClue.getTeam().getTeamName()+"\" finished all clues at "+currentClue.getUnLockTime(),currentClue.getUnLockTime()),currentClue.getTeam().getId(),currentClue.getId(),currentClue.getUnLockTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(formatter),true,false).toString());
                 }
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+
                model.addAttribute("completiontime",jpaClueRepository.findByUuidAndPassword(uuid, pwd).get(0).getUnLockTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(formatter));
                 return "winner";
 
             }
             else
             {
-                currentClue.setUnLocked(true);
-                jpaClueRepository.saveAll(clue);
+                if(!currentClue.isUnLocked()) {
+                    currentClue.setUnLocked(true);
+                    currentClue.setUnLockTime(new Date());
+                    PushSocket.broadCast(new Notification(Notification.add("Team \"" + currentClue.getTeam().getTeamName() + "\" has unlocked clue "+currentClue.getClueTitle(),currentClue.getUnLockTime()), currentClue.getTeam().getId(), currentClue.getId(), currentClue.getUnLockTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(formatter), true, false).toString());
+                    jpaClueRepository.saveAll(clue);
+                }
             }
 
             model.addAttribute("uuid", uuid);
@@ -159,7 +179,7 @@ public class GeneralController {
 
         session.setAttribute("username","");
         session.setAttribute("username",null);
-        PushSocket.broadCast("Logged out");
+
 
         return "redirect:../admin";
 
@@ -173,6 +193,7 @@ public class GeneralController {
         System.out.println("hello");
         return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getMessage()) + "!");
     }
+
 
 
 }
