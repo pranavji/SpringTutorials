@@ -40,15 +40,9 @@ public class ViewController {
 
     @GetMapping("/")
     public String main(Model model) {
-        for (Team team : jpaTeamRepository.findAll()) {
-            Logger logger = LoggerFactory.getLogger(ViewController.class);
-            logger.info(team.toString());
-            System.out.println(team.toString());
-        }
-        model.addAttribute("message", "test");
-        model.addAttribute("tasks", tasks);
 
-        return "index"; //view
+
+        return "admin/login"; //view
     }
     @GetMapping("/admin")
     public String admin(@RequestParam(name = "message", required = false, defaultValue = "") String message,Model model, HttpSession session) {

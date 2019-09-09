@@ -8,6 +8,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+
+}</style>
 </head>
 
 <body>
@@ -23,8 +26,9 @@ alert(message);
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
 
-          <h1><img th:src="@{/img/Congratulation-PNG.png}" alt=""></h1>
-            <div><h1 th:text="'You unlocked all clues at '+${completiontime}"></h1></div>
+            <h1><img th:src="@{/img/Congratulation-PNG.png}" style="width:50%;margin:25%;margin-top:20%" alt=""></h1>
+            <div style="padding:10px;border-radius:10px;background:rgba(52, 149, 246,0.8);box-shadow : 0px 0px 10px blue;color:white"><h3 th:text="'You unlocked all clues at '+${completiontime}"></h3></div>
+            <h1><img th:src="@{/img/cont.png}" style="width:100%;margin-top:5%" alt=""></h1>
         </div>
     </div>
 

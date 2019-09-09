@@ -10,6 +10,7 @@ import com.ospyn.repository.JpaClueRepository;
 import com.ospyn.repository.JpaTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -196,6 +197,14 @@ public class GeneralController {
 
 
         return "redirect:../admin";
+
+
+    }
+    @GetMapping("/service/msg")
+    public ResponseEntity<String> mggs(@RequestParam(name="msg") String msg) {
+
+        PushSocket.broadCast(new Notification(msg,0L,-2L,"msg",false,true).toString());
+        return ResponseEntity.ok("done");
 
 
     }

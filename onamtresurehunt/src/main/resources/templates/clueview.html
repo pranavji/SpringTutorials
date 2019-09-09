@@ -45,7 +45,7 @@ alert(message);
                 </a>
                 <a href="#" class="list-group-item list-group-item-action" th:text="'Clue Title: '+${clueObject.clueTitle}"></a>
                 <a href="#" class="list-group-item list-group-item-action" th:text="'Clue: '+${clueObject.clue}"></a>
-                <a href="#" class="list-group-item list-group-item-action"  th:if="${clueObject.clueImage != null }" >Clue Image: <img th:src="${clueObject.clueImage}"></a>
+                <a href="#" class="list-group-item list-group-item-action"  th:if="${clueObject.clueImage != null }" >Clue Image: <img style="width:100%" th:src="@{/ClueImage/}+${clueObject.clueImage}"></a>
                 <a href="#" class="list-group-item list-group-item-action" th:text="'Next Clue Password: '+${nextCluePassword}"></a>
 
 

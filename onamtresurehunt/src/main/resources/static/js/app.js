@@ -2,8 +2,10 @@
 var pushSocket = new WebSocket("ws://202.88.244.214:6005/push")
 
 pushSocket.onmessage = function (event) {
-   notificationDTO = JSON.parse(event.data);
 
+   notificationDTO = JSON.parse(event.data);
+   if(notificationDTO.clueid!="-2")
+   {
    winner= '<li th:if="${team.winner}" class="nav-item" > <a class="nav-link" href="#" data-toggle="button">  <i class="material-icons">announcement</i>Winner <div class="ripple-container"></div> </a></li>';
    $("#unlocked"+notificationDTO.clueid).text(notificationDTO.done);
    $("#unlocktime"+notificationDTO.clueid).text(notificationDTO.unlocktime);
@@ -12,6 +14,12 @@ pushSocket.onmessage = function (event) {
    $("#teamcontainer"+notificationDTO.teamid).html(winner);
    }
    loadNotification();
+   }
+   else
+   {
+   alert(notificationDTO.message);
+
+   }
 //  alert(notificationDTO.teamid);
 //
 //   alert(notificationDTO.winner);
@@ -141,16 +149,17 @@ function (data) {
     $.get(
     "http://202.88.244.214:6005/ajax/notification",
     function(data){
+    $("#notificationContent").empty();
+     content="<ul class='list-group'>";
 
-    $("#notificationContent").append("<ul class='list-group'></ul>");
 
     $.each(data, function(i, item) {
 
-        $("#notificationContent").append('<a style="border-radius:5px;margin-bottom:20px;padding:25px" href="#" class="list-group-item active "><div class="row">'+data[i].message+'</div><div class="row" style="float:right;font-size:10px;">'+data[i].timeStamp+'</div></a>');
-
+        content+='<a style="border-radius:5px;margin-bottom:20px;padding:25px" href="#" class="list-group-item active "><div class="row">'+data[i].message+'</div><div class="row" style="float:right;font-size:10px;">'+data[i].timeStamp+'</div></a>';
 
     });
-
+     content+="</ul>";
+     $("#notificationContent").html(content);
 
     }
     );
