@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8" />
   <link rel="apple-touch-icon" sizes="76x76" th:href="@{/img/apple-icon.png}">
-  <link rel="icon" type="image/png" th:href="@{/img/favicon.png}" >
+  <link rel="icon" type="image/png" th:href="@{/img/logo.png}" >
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
     TreasureHunt Admin
@@ -20,6 +20,8 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link   th:href="@{/demo/demo.css}" rel="stylesheet" />
   <link   th:href="@{/css/main.css}" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script th:src= "@{/js/app.js}" ></script>
 </head>
 
 <body class="" style="height:100vh;width:100vw">
@@ -39,11 +41,11 @@ alert(message);
 
 </script>
 
-<div id="dialogContainer" style="display:none;width:100%;height:100%;background-color:black;position:absolute;top:0px;left:0px;z-index:999">
+<div id="dialogContainer" style="display:none;width:100%;height:100%;background-color:black;position:fixed;top:0px;left:0px;z-index:999">
 
-  <div class="center" style="background:white;z-index:999999999">
+  <div class="center" style="background:white;z-index:999999999;position:fixed;top:30%;left:35%;">
     <button class="btn btn-warning" style="background:red;position:absolute;top:20px;right:20px;" onclick="closeContainer();">X</button>
-    <div id="dialogBox"></div>
+    <div id="dialogBox" class=""></div>
 
   </div>
 </div>
@@ -56,7 +58,7 @@ alert(message);
     -->
       <div class="logo">
         <a href="admin" class="simple-text logo-normal">
-          OSPYN
+          <img th:src="@{/img/logo.png}"><br>Onam Tresure Hunt
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -64,12 +66,13 @@ alert(message);
         <ul class="nav">
 
           <th:block th:each="team : ${teams}">
-          <li class="nav-item active  ">
-            <a class="nav-link  no_target" href="">
+          <li class="nav-item active  " style="margin-bottom:80px" >
+            <a class="nav-link" th:href="'#div'+${team.id}" style="margin-bottom:3px">
               <i class="material-icons">dashboard</i>
               <p th:text="${team.teamName}"></p>
-              <!--<span style="z-index:999" th:onclick="'javascript:deleteTeam(\'' + ${team.id} + '\');'" >
-              <i title="Delete" style="float:right;color:red;background:lightred;margin-top:-30px" class="material-icons deletebutton">delete</i></span>-->
+            </a>
+              <a href="#"  style="float:right;margin-top:0px" th:onclick="'javascript:deleteTeam(\'' + ${team.id} + '\');'" >
+              Delete
             </a>
 
           </li>
@@ -123,17 +126,21 @@ alert(message);
       <!-- End Navbar -->
       <div class="content">
 
-        <div class="container-fluid">
+       <div class="container-fluid">
+         <div class="row">
+           <div class="col-lg-10 col-md-10">
+
+             <div class="container-fluid">
 
 
-          <div class="row">
-            <th:block th:each="team : ${teams}">
-            <div class="col-lg-12 col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary switch-trigger">
-                  <h4 class="card-title" th:text="${team.teamName}"></h4>
-                  <p class="card-category">CLUES</p>
-                  <ul class="nav nav-tabs" data-tabs="tabs">
+               <div class="row">
+                 <th:block th:each="team : ${teams}">
+                   <div class="col-lg-12 col-md-12" th:id="'div'+${team.id}">
+                     <div class="card">
+                       <div class="card-header card-header-primary switch-trigger">
+                         <h4 class="card-title" th:text="${team.teamName}"></h4>
+                         <p class="card-category">CLUES</p>
+                         <span class="nav nav-tabs" data-tabs="tabs">
 
                     <li class="nav-item">
                       <a class="nav-link" href="#" data-toggle="button">
@@ -146,46 +153,75 @@ alert(message);
                         <i class="material-icons">add</i> Add Clue
                         <div class="ripple-container"></div>
                       </a>
+
+                    <li  th:id="${'teamcontainer'+team.id}" class="nav-item" >
+                    <a th:if="${team.winner}" class="nav-link" href="#" data-toggle="button">
+                      <i class="material-icons">announcement</i>Winner
+                    <div class="ripple-container"></div>
+                    </a>
                     </li>
+                  </span>
 
-                  </ul>
-                </div>
-                <div class="card-body table-responsive">
-                  <table  class="table table-hover">
-                    <thead class="text-warning">
-                      <th>ID</th>
-                      <th>Clue Title</th>
-                      <th>Clue</th>
-                      <th>Password</th>
-                      <th>Done</th>
-                      <th>QrCode</th>
-                      <th>Action</th>
-                    </thead>
-                    <tbody th:with ="index=0">
-                    <th:block th:each="clue,iterationStatus : ${team.clues}">
-                      <tr >
-                        <td th:text="${iterationStatus.count}"></td>
-                        <td th:text ="${clue.clueTitle}" ></td>
-                        <td th:text ="${clue.clue}" ></td>
-                        <td th:text ="${clue.password}"></td>
-                        <td th:text ="${clue.unLocked}"></td>
-                        <td> <a href="#" th:onclick="'javascript:viewClue(\'' + ${clue.id} + '\');'" class="no_target"> <br><img style="width:40px" th:src="@{'/QRCodes/qr'+${clue.id}}+'.png'"/> Click to Open</a></td>
-                        <td><i class="material-icons">edit</i> <i class="material-icons">delete</i></td>
-                      </tr>
+                         </ul>
+                       </div>
+                       <div class="card-body table-responsive">
+                         <table  class="table table-hover">
+                           <thead class="text-warning">
+                           <th>ID</th>
+                           <th>Clue Title</th>
+                           <th>Clue</th>
+                           <th>Password</th>
+                           <th>Done</th>
+                           <th>Unlock TimeStamp</th>
+                           <th>QrCode</th>
+                           <th>ClueImage</th>
+                           <th>Action</th>
+                           </thead>
+                           <tbody th:with ="index=0">
+                           <th:block th:each="clue,iterationStatus : ${team.clues}">
+                             <tr >
+                               <td th:text="${iterationStatus.count}"></td>
+                               <td th:id="${'cluetitle' + clue.id}" th:text ="${clue.clueTitle}" ></td>
+                               <td th:id="${'clue' + clue.id}" th:text ="${clue.clue}" ></td>
+                               <td th:id="${'cluepassword' + clue.id}" th:text ="${clue.password}"></td>
+                               <td th:id="${'unlocked' + clue.id}" th:text ="${clue.unLocked}"></td>
+                               <td th:id="${'unlocktime'+clue.id}" th:text ="${clue.unLockTime}"></td>
+                               <td  > <a href="#" th:data1="${clue.uuid}" onclick="viewClue(this.getAttribute('data1'))" class="no_target"> <br><img style="width:40px" th:src="@{'/QRCodes/qr'+${clue.uuid}}+'.png'"/> Click to Open</a></td>
+                               <td   > <a th:if="${clue.clueImage != null }" href="#" th:data2="${clue.clueImage}" onclick="viewClueImage(this.getAttribute('data2'))" class="no_target"> <br><img style="width:40px" th:src="@{'/ClueImage/'+${clue.clueImage}}"/> Click to Open</a></td>
+                               <input th:id="${'clueimages'+clue.id}" type="hidden" th:value="${clue.clueImage}">
 
-                    </th:block>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+                               <td><a  href="#" th:onclick="'editClue(\''+${clue.id}+'\')'"><i class="material-icons">edit</i></a>
+                                 <a  href="#" th:onclick="'deleteClue(\''+${team.id}+'\',\''+${clue.id}+'\')'"> <i class="material-icons">delete</i></a></td>
+                             </tr>
 
-            </th:block>
+                           </th:block>
+                           </tbody>
+                         </table>
+                       </div>
+                     </div>
+                   </div>
 
 
-          </div>
+                 </th:block>
 
-        </div>
+
+               </div>
+
+             </div>
+
+           </div>
+           <div class="col-lg-2 col-md-2">
+
+             <div style="position:fixed;height:80vh;background:rgba(255,255,255,0.8);padding:20px;border-radius:5px;overflow-y:auto">
+               <h2>Notifications</h2>
+               <div id="notificationContent">
+
+               </div>
+             </div>
+           </div>
+         </div>
+
+       </div>
       </div>
 
 
@@ -468,12 +504,16 @@ alert(message);
   <div style="display:none" id="addClueForm">
     <div >  <form action="service/addclue">
       <div class="form-group" style="margin-top:50px">
-      <label for="cluetitile">Clue Title</label>
-        <input required="true" type="text" class="form-control" name="cluetitle" id="cluetitile">
+      <label for="cluetitle">Clue Title</label>
+        <input required="true" type="text" class="form-control" name="cluetitle" id="cluetitle">
       </div>
       <div class="form-group" style="margin-top:50px">
       <label for="clue">Clue</label>
       <input required="true" type="text" class="form-control" name="clue" id="clue">
+    </div>
+      <div class="form-group" style="margin-top:50px">
+      <label for="clue">Clue Image Name</label>
+      <input  type="text" class="form-control" name="clueimage" id="clueimage">
     </div>
       <div class="form-group" style="margin-top:50px">
         <label for="password">Passcode</label>
@@ -482,6 +522,8 @@ alert(message);
       <div class="form-group" style="margin-top:50px">
         <input required="true" type="hidden" class="form-control" name="teamid" id="xxteamid">
       </div>
+      <input th:id="xxclueid" type="hidden" name="clueid">
+      <input th:id="formmode" type="hidden" name="mode">
       <button style="position:absolute;bottom:20px;right:20px;" type="submit" class="btn btn-primary">Add</button>
         </form>
     </div>
@@ -490,59 +532,12 @@ alert(message);
 </div>
 
 <div id="qrdiv" style="display:none">
-  <img style="Height:100%;" id="qrsrc">
+  <img style="Height:100%;" class="qrsrc">
 </div>
   <script>
-
-  function deleteTeam(teamid)
-  {
-  alert(id);
-  }
-  function openAddDialog(mode,id)
-  {
-
-
-     addTeamContent= '<div >  <form action="service/addteam">    <div class="form-group" style="margin-top:50px">      <label for="teamname">Team Name</label>'+
-      '<input required="true" type="teamname" class="form-control" name="teamname" id="teamname">     </div>    <button style="position:absolute;bottom:20px;right:20px;" type="submit" class="btn btn-primary">Add</button>'+
-        '</form></div>';
-
-
-
-
-  if(mode=="addTeamContent")
-  $("#dialogBox").html(addTeamContent);
-  else if(mode=="addClueContent")
-  {
-  $("#xxteamid").val(id);
-  $("#dialogBox").html($("#addClueForm").html());
-
-   }
-   else if(mode=="viewClue")
-  {
-  $("#qrsrc").attr("src","/QRCodes/qr"+id+".png");
-  $("#dialogBox").html($("#qrdiv").html());
-
-   }
-
-  $("#dialogContainer").fadeIn();
-  }
-  function closeContainer()
-  {
-  $("#dialogContainer").fadeOut();
-  }
-     $(document).ready(function() {
-            $(".no_target").click(function() {
-                return false;
-            });
-        });
-  function addClue(id)
-  {
-  openAddDialog("addClueContent",id);
-  }
-  function viewClue (id)
-  {
-  openAddDialog("viewClue",id);
-  }
+    $( document ).ready(function() {
+    loadNotification();
+});
   </script>
 </body>
 

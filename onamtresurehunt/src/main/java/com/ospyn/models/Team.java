@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-@Table(name = "team_list")
+@Table(name = "teamlist")
 public class Team {
 
     @Id
@@ -25,9 +25,12 @@ public class Team {
     @NotNull
     private String teamName;
 
-    @OneToMany(mappedBy = "team" , cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team" ,fetch = FetchType.EAGER)
 
     private List<Clue> clues;
+
+    @Column
+    boolean winner;
 
     public Team(String teamName) {
         this.teamName = teamName;

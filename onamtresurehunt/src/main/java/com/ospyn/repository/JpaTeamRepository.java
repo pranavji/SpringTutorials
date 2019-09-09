@@ -9,4 +9,5 @@ public interface JpaTeamRepository extends CrudRepository<Team,Long> {
 
     Optional<Team> findById(Long id);
 
+
 }

@@ -7,7 +7,7 @@ cursor:grabbing ;
 {
 height: 480px;
   width: 640px;
-  position: absolute;
+  position: static;
   left: 35%;
   margin-left: -50px;
   top: 25%;
@@ -16,4 +16,7 @@ height: 480px;
   border-radius:20px;
   padding:40px;
   padding-top:100px;
+}
+html {
+  scroll-behavior: smooth;
 }
